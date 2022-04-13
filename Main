@@ -1,0 +1,418 @@
+#HHI
+
+#load the necessary libraries
+library("readxl")
+library("xlsx")
+library(tidyverse)
+library(openxlsx)
+library(readxl)
+#library(xlsx)
+library(openxlsx)
+#library(devtools)
+library(plyr)
+library(dplyr)
+
+
+#upload the excel dataset:
+df <- read_excel("C:\\Use.....xlsx")
+
+#check the data:
+head(df)
+str(df)
+class(df)
+summary(df)
+#check the sum of EUR Balance
+sum(df[10], na.rm = T)
+
+
+#drop the first column:
+df[,1]<- NULL
+
+
+#mapping
+#set the column name as "SECTOR.ID":
+colnames(df)[24] <- "SECTOR.ID"
+#create an empty column:
+df$mapped <- NA
+#create indexes to choose the sectors
+mappingIndexManufacturing <- which(df$SECTOR.ID == "100" | df$SECTOR.ID == "110"
+                                   | df$SECTOR.ID == "120"| df$SECTOR.ID == "130"
+                                   | df$SECTOR.ID == "140"| df$SECTOR.ID == "150"
+                                   | df$SECTOR.ID == "160"| df$SECTOR.ID == "170"
+                                   | df$SECTOR.ID == "180"| df$SECTOR.ID == "190"
+                                   | df$SECTOR.ID == "20"| df$SECTOR.ID == "200"
+                                   | df$SECTOR.ID == "210"| df$SECTOR.ID == "220"
+                                   | df$SECTOR.ID == "230"| df$SECTOR.ID == "240"
+                                   | df$SECTOR.ID == "250"| df$SECTOR.ID == "260"
+                                   | df$SECTOR.ID == "270"| df$SECTOR.ID == "280"
+                                   | df$SECTOR.ID == "290"| df$SECTOR.ID == "300"
+                                   | df$SECTOR.ID == "310"| df$SECTOR.ID == "320"
+                                   | df$SECTOR.ID == "580")
+
+
+df$mapped[mappingIndexManufacturing] <- "Manufacturing"
+
+
+
+
+
+
+mappingIndexFinancialInd <- which(df$SECTOR.ID == "64A" | df$SECTOR.ID == "64B"
+                                  | df$SECTOR.ID == "64C"| df$SECTOR.ID == "64D"
+                                  | df$SECTOR.ID == "64E"| df$SECTOR.ID == "64F"
+                                  | df$SECTOR.ID == "64G"| df$SECTOR.ID == "64H"
+                                  | df$SECTOR.ID == "64I"| df$SECTOR.ID == "64J"
+                                  | df$SECTOR.ID == "64K"| df$SECTOR.ID == "64L"
+                                  | df$SECTOR.ID == "64M"| df$SECTOR.ID == "64N"
+                                  | df$SECTOR.ID == "65A"| df$SECTOR.ID == "65B"
+                                  | df$SECTOR.ID == "65C"| df$SECTOR.ID == "660"
+                                  | df$SECTOR.ID == "70A"| df$SECTOR.ID == "74B"
+                                  | df$SECTOR.ID == "74C"| df$SECTOR.ID == "74D"
+                                  | df$SECTOR.ID == "830"| df$SECTOR.ID == "84B")
+
+df$mapped[mappingIndexFinancialInd] <- "Financial industry (bank and non-bank) "
+
+
+
+
+mappingIndexConstruction <- which(df$SECTOR.ID == "410" | df$SECTOR.ID == "420"
+                                  | df$SECTOR.ID == "430")
+
+
+df$mapped[mappingIndexConstruction] <- "Construction"
+
+
+
+mappingIndexRealEstComm <- which(df$SECTOR.ID == "68A" | df$SECTOR.ID == "68B")
+
+
+
+df$mapped[mappingIndexRealEstComm] <- "Real Estate (commercial)"
+
+
+
+
+
+
+mappingIndexServices <- which(df$SECTOR.ID == "330" | df$SECTOR.ID == "450"
+                              | df$SECTOR.ID == "550"| df$SECTOR.ID == "590"
+                              | df$SECTOR.ID == "600"| df$SECTOR.ID == "620"
+                              | df$SECTOR.ID == "630"| df$SECTOR.ID == "690"
+                              | df$SECTOR.ID == "70B"| df$SECTOR.ID == "710"
+                              | df$SECTOR.ID == "720"| df$SECTOR.ID == "730"
+                              | df$SECTOR.ID == "740"| df$SECTOR.ID == "74B"
+                              | df$SECTOR.ID == "710"| df$SECTOR.ID == "720"
+                              | df$SECTOR.ID == "730"| df$SECTOR.ID == "740"
+                              | df$SECTOR.ID == "74A"| df$SECTOR.ID == "750"
+                              | df$SECTOR.ID == "780"| df$SECTOR.ID == "790"
+                              | df$SECTOR.ID == "800"| df$SECTOR.ID == "810"
+                              | df$SECTOR.ID == "820"| df$SECTOR.ID == "84A"
+                              | df$SECTOR.ID == "850"| df$SECTOR.ID == "860"
+                              | df$SECTOR.ID == "870"| df$SECTOR.ID == "880"
+                              | df$SECTOR.ID == "900"| df$SECTOR.ID == "910"
+                              | df$SECTOR.ID == "920"| df$SECTOR.ID == "930"
+                              | df$SECTOR.ID == "940"| df$SECTOR.ID == "950"
+                              | df$SECTOR.ID == "960"| df$SECTOR.ID == "790"
+                              | df$SECTOR.ID == "800"| df$SECTOR.ID == "97A"
+                              | df$SECTOR.ID == "97B"| df$SECTOR.ID == "980")
+
+df$mapped[mappingIndexServices] <- "Services and other"
+
+
+
+mappingIndexTransport <- which(df$SECTOR.ID == "350" | df$SECTOR.ID == "360"
+                               | df$SECTOR.ID == "370"| df$SECTOR.ID == "380"
+                               | df$SECTOR.ID == "390"| df$SECTOR.ID == "490"
+                               | df$SECTOR.ID == "500"| df$SECTOR.ID == "510"
+                               | df$SECTOR.ID == "520"| df$SECTOR.ID == "530" 
+                               | df$SECTOR.ID == "610"| df$SECTOR.ID == "770")
+
+
+
+df$mapped[mappingIndexTransport] <- "Transport, storage and utilities"
+
+
+
+mappingIndexWholesaleNRetail <- which(df$SECTOR.ID == "460" | df$SECTOR.ID == "470"
+                                      | df$SECTOR.ID == "560"| df$SECTOR.ID == "60")
+
+df$mapped[mappingIndexWholesaleNRetail] <- "Wholesale and retail trade"
+
+
+
+
+mappingIndexAgriculture <- which(df$SECTOR.ID == "10" | df$SECTOR.ID == "30")
+
+
+df$mapped[mappingIndexAgriculture] <- "Agriculture, forestry and fishing"
+
+
+
+
+mappingIndexMining <- which(df$SECTOR.ID == "50" | df$SECTOR.ID == "70"|
+                              df$SECTOR.ID == "80" | df$SECTOR.ID == "90")
+
+
+df$mapped[mappingIndexMining] <- "Mining and quarrying"
+
+
+#I created a column called as mapped showing the sectors according to analysis from the Bank of England 
+
+#set the column name as "EUR.BALANCE":
+colnames(df)[9] <- "EUR.BALANCE"
+
+#change the german notation to anglo-american ( , to .):
+#df[] <- lapply(df, sub, pattern=',', replacement='.')
+#set the EUR BALANCE to numeric type:
+#df$EUR.BALANCE<- as.numeric(df$EUR.BALANCE)
+
+
+Manufacturing <- sum(df$EUR.BALANCE[mappingIndexManufacturing],na.rm =T)
+FinancialInd<-sum(df$EUR.BALANCE[mappingIndexFinancialInd],na.rm =T)
+Construction <-sum(df$EUR.BALANCE[mappingIndexConstruction],na.rm =T)
+RealEstate<-sum(df$EUR.BALANCE[mappingIndexRealEstComm],na.rm =T)
+ServicesandOthers<-sum(df$EUR.BALANCE[mappingIndexServices],na.rm =T)
+Transport<-sum(df$EUR.BALANCE[mappingIndexTransport],na.rm =T)
+Retail<-sum(df$EUR.BALANCE[mappingIndexWholesaleNRetail],na.rm =T)
+Agriculture<-sum(df$EUR.BALANCE[mappingIndexAgriculture],na.rm =T)
+Mining<-sum(df$EUR.BALANCE[mappingIndexMining],na.rm =T)
+Sum <- sum(df$EUR.BALANCE,na.rm =T)
+
+
+sectors <- data.frame(rbind(Manufacturing,FinancialInd,Construction,RealEstate,ServicesandOthers,Transport,Retail,Agriculture,Mining,Sum))
+
+#check the sum of EUR bALANCE again:
+sum(df[9], na.rm = T)
+
+sectors[,2] <- NA
+sectors[1,2] <- sectors[1,1]^2/sectors[10,1]^2
+sectors[2,2] <- sectors[2,1]^2/sectors[10,1]^2
+sectors[3,2] <- sectors[3,1]^2/sectors[10,1]^2
+sectors[4,2] <- sectors[4,1]^2/sectors[10,1]^2
+sectors[5,2] <- sectors[5,1]^2/sectors[10,1]^2
+sectors[6,2] <- sectors[6,1]^2/sectors[10,1]^2
+sectors[7,2] <- sectors[7,1]^2/sectors[10,1]^2
+sectors[8,2] <- sectors[8,1]^2/sectors[10,1]^2
+sectors[9,2] <- sectors[9,1]^2/sectors[10,1]^2
+
+sectors[10,2] <- sum(sectors[1:9,2])
+
+colnames(sectors) <- c("Sector Sums" ,"Ratios")
+
+#print the sector HHI alone:
+HHI_Sector <- sectors[10,2]
+
+
+##############
+#Country Concentration:
+
+
+#countryMappingIndexTR <- which(df$RISK_ULKE_KODU == "TR")
+#df$mappedCountry[countryMappingIndexTR] <- "Turkey"
+
+
+
+countryMappingIndexWest<- which(df$RISK_ULKE_KODU== "AT"
+                                |df$RISK_ULKE_KODU == "BE"
+                                |df$RISK_ULKE_KODU == "CH"
+                                |df$RISK_ULKE_KODU == "DE"
+                                |df$RISK_ULKE_KODU == "DK"
+                                |df$RISK_ULKE_KODU == "ES"
+                                |df$RISK_ULKE_KODU== "FI"
+                                |df$RISK_ULKE_KODU == "FR"
+                                |df$RISK_ULKE_KODU == "IT"
+                                |df$RISK_ULKE_KODU == "NL"
+                                |df$RISK_ULKE_KODU == "NO"
+                                |df$RISK_ULKE_KODU == "SE")
+
+
+df$mappedCountry[countryMappingIndexWest] <- "European (west) area"
+
+countryMappingIndexEastNCentAsia<- which(df$RISK_ULKE_KODU== "AZ"
+                                         |df$RISK_ULKE_KODU== "BA"
+                                         |df$RISK_ULKE_KODU== "BG"
+                                         |df$RISK_ULKE_KODU== "CZ"
+                                         |df$RISK_ULKE_KODU== "EE"
+                                         |df$RISK_ULKE_KODU== "GE"
+                                         |df$RISK_ULKE_KODU== "GR"
+                                         |df$RISK_ULKE_KODU== "PL"
+                                         |df$RISK_ULKE_KODU== "SI"
+                                         |df$RISK_ULKE_KODU== "SK"
+                                         |df$RISK_ULKE_KODU== "TR")
+
+
+df$mappedCountry[countryMappingIndexEastNCentAsia] <- "Eastern Europe and Central Asia (including Russian Federation)"
+
+countryMappingIndexUS<- which(df$RISK_ULKE_KODU == "US" |df$RISK_ULKE_KODU == "CA")
+
+df$mappedCountry[countryMappingIndexUS] <- "North America"
+
+
+countryMappingIndexMiddleEast<- which(df$RISK_ULKE_KODU == "IR" |df$RISK_ULKE_KODU == "IQ")
+
+df$mappedCountry[countryMappingIndexMiddleEast] <- "Middle East  and North Africa"
+
+
+countryMappingIndexSA<- which(df$RISK_ULKE_KODU == "IN" |df$RISK_ULKE_KODU == "PK")
+
+df$mappedCountry[countryMappingIndexSA] <- "South Asia"
+
+
+EuropeWest <- sum(df$EUR.BALANCE[countryMappingIndexWest],na.rm =T)
+EuropeEast <- sum(df$EUR.BALANCE[countryMappingIndexEastNCentAsia],na.rm =T)
+NorthAmerica <- sum(df$EUR.BALANCE[countryMappingIndexUS],na.rm =T)
+MiddleEast <- sum(df$EUR.BALANCE[countryMappingIndexMiddleEast],na.rm =T)
+SouthAsia <- sum(df$EUR.BALANCE[countryMappingIndexSA],na.rm =T)
+#Turkey <- sum(df$EUR.BALANCE[countryMappingIndexTR],na.rm =T)
+
+
+
+Geo <- data.frame(rbind(EuropeWest, EuropeEast, NorthAmerica, MiddleEast,SouthAsia, Sum))
+
+Geo[1,2] <- Geo[1,1]^2/Geo[6,1]^2
+Geo[2,2] <- Geo[2,1]^2/Geo[6,1]^2
+Geo[3,2] <- Geo[3,1]^2/Geo[6,1]^2
+Geo[4,2] <- Geo[4,1]^2/Geo[6,1]^2
+Geo[5,2] <- Geo[5,1]^2/Geo[6,1]^2
+#[6,2] <- Geo[6,1]^2/Geo[7,1]^2
+Geo[6,2] <- sum(Geo[1:5,2])
+
+
+colnames(Geo) <- c("Geography Sums" ,"Ratios")
+
+HHI_Geo <- Geo[6,2]
+
+
+##########################################
+
+
+
+singleName<- data.frame(aggregate(df$EUR.BALANCE, list(df$NEWGROUPNAME), FUN=sum))
+
+colnames(singleName) <- c("Group Name" ,"Group Sum")
+
+singleName$Ratio <- singleName$`Group Sum` ^2 / Sum^2
+
+
+
+HHI_SingleName <- sum(as.numeric(singleName[1:nrow(singleName),3]), na.rm=T)
+
+sumhhi <- c("Sum", Sum, HHI_SingleName)
+
+singleName <- rbind(singleName, sumhhi)
+#set the names as row names
+rownames(singleName) <- singleName$`Group Name`
+#delete the 1st column
+singleName$`Group Name` <- NULL
+
+#############################
+
+
+
+
+#simple table for HHI and ADD-ONs
+#all HHI:
+
+HHI <- data.frame(rbind(HHI_Sector, HHI_Geo, HHI_SingleName))
+
+
+HHI[,2] <- NA
+colnames(HHI) <- c("HHI", "Add_On")
+
+
+if(HHI[1,1] < 0.203){
+  HHI[1,2] <- 0.0025
+} else if(HHI[1,1] <0.258){
+  HHI[1,2] <- 0.005
+} else if(HHI[1,1] <0.417){
+  HHI[1,2] <- 0.01
+} else if(HHI[1,1] <0.674) {
+  HHI[1,2] <- 0.015
+} else {
+  HHI[1,2] <- 0.028
+}
+
+
+
+
+
+if(HHI[2,1] < 0.249){
+  HHI[2,2] <- 0.002
+} else if(HHI[2,1] <0.345){
+  HHI[2,2] <- 0.005
+} else if(HHI[2,1] <0.478){
+  HHI[2,2] <- 0.008
+} else if(HHI[2,1] <0.779) {
+  HHI[2,2] <- 0.0125
+} else {
+  HHI[2,2] <- 0.014
+}
+
+
+
+
+if(HHI[3,1] < 0.0029){
+  HHI[3,2] <- 0.005
+} else if(HHI[3,1] <0.0059){
+  HHI[3,2] <- 0.01
+} else if(HHI[3,1] <0.0115){
+  HHI[3,2] <- 0.02
+} else if(HHI[3,1] <0.0165) {
+  HHI[3,2] <- 0.03
+} else {
+  HHI[3,2] <- 0.04
+}
+
+
+TotalADDON <- sum(HHI[,2])
+print(TotalADDON)
+
+
+
+
+
+##############################
+
+#write the results as xlsx:
+#write.xlsx(sectors,
+           #file="HHI_AddOn_Report.xlsx", sheetName="sector",rowNames=T, append =FALSE, colNames=T)
+
+
+#write.xlsx(Geo,
+           #file="HHI_AddOn_Report.xlsx", sheetName="country",rowNames=T, append= TRUE, colNames=T)
+
+
+
+#write.xlsx(singleName,
+          # file="HHI_AddOn_Report.xlsx", sheetName="SingleName",rowNames=T, append= TRUE, colNames=T)
+
+
+
+#write.xlsx(HHI,
+           #file="HHI_AddOn_Report.xlsx", sheetName="HHI+ADDONs",rowNames=T, append= TRUE, colNames=T)
+    
+
+
+#################
+
+### Separate excel documents:
+
+write.xlsx(sectors,
+           file="Sectors.xlsx", sheetName="sector",rowNames=T, append =FALSE, colNames=T)
+
+
+write.xlsx(Geo,
+           file="Country.xlsx", sheetName="country",rowNames=T, append= TRUE, colNames=T)
+
+
+
+write.xlsx(singleName,
+           file="Single Name.xlsx", sheetName="SingleName",rowNames=T, append= TRUE, colNames=T)
+
+
+
+write.xlsx(HHI,
+           file="HHI_AddOn_Report.xlsx", sheetName="HHI+ADDONs",rowNames=T, append= TRUE, colNames=T)
+
+
+
